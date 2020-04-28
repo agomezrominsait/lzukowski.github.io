@@ -5,7 +5,6 @@ categories: [ddd, stackoverflow]
 tags: [python, continuous delivery, feature switch]
 ---
 
-# Reasoning
 Introducing branching in code (by feature toggle) is not the easiest practice but gives you some direct and some not direct benefits. 
 
 Let's start with direct ones. 
