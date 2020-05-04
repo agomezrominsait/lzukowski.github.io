@@ -42,29 +42,29 @@ def shipment():
     return mock.Mock(is_domestic=True, shipping_address=mock.Mock(phone=None))
 
 
-@pytest.mark.parametrize("phone", [
+@pytest.mark.parametrize("invalid_phone", [
     None, '', '344546234', '0 44 72453', '+44 072453', '+44472453',
 ])
-def test_providing_phone_for_domestic_shipment(
-        phone, service, shipment, gb_default_phone,
+def test_default_gb_phone_when_invalid_phone_in_gb_shipment(
+        invalid_phone, service, shipment, gb_default_phone,
 ):
-    shipment.shipping_address.phone = phone
+    shipment.shipping_address.phone = invalid_phone
     service.provide(shipment, 'GB')
     assert shipment.shipping_address.phone == gb_default_phone
 
 
-@pytest.mark.parametrize("phone, expected_phone", [
+@pytest.mark.parametrize("phone, normalized_phone", [
     ('0 7  344546234', '07344546234'),
     ('7 344546234', '07344546234'),
     ('+ 44 72453', '072453'),
     ('0 044 72453', '072453'),
 ])
-def test_not_providing_phone_for_domestic_shipment(
-        phone, expected_phone, service, shipment,
+def test_number_normalization_when_valid_gb_phone(
+        phone, normalized_phone, service, shipment,
 ):
     shipment.shipping_address.phone = phone
     service.provide(shipment, 'GB')
-    assert shipment.shipping_address.phone == expected_phone
+    assert shipment.shipping_address.phone == normalized_phone
 
 
 @pytest.mark.parametrize("phone, country", [
