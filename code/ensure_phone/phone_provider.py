@@ -1,8 +1,23 @@
+from typing import Callable, NewType, Optional, Text
+
+Country = NewType('Country', Text)
+Phone = NewType('Phone', Text)
+ParameterService = Callable[[Text], Text]
+
+
+class Shipment:
+    class Address:
+        phone: Optional[Phone]
+
+    is_domestic: bool
+    shipping_address: Address
+
+
 class PhoneProvider:
-    def __init__(self, parameters_service):
+    def __init__(self, parameters_service: ParameterService):
         self._parameters_service = parameters_service
 
-    def provide(self, shipment, country):
+    def provide(self, shipment: Shipment, country: Country) -> None:
         shipment.shipping_address.phone = \
             self._ensure_phone(shipment.shipping_address.phone, country)
         if not shipment.shipping_address.phone:
@@ -13,7 +28,9 @@ class PhoneProvider:
                 pass
 
     @staticmethod
-    def _ensure_phone(phone, country):
+    def _ensure_phone(
+            phone: Optional[Phone], country: Country,
+    ) -> Optional[Phone]:
         if not phone:
             return phone
         if country == 'GB':
