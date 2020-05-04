@@ -39,9 +39,7 @@ def service(gb_default_phone):
 
 @pytest.fixture
 def shipment():
-    s = mock.Mock()
-    s.is_domestic = True
-    return s
+    return mock.Mock(is_domestic=True, shipping_address=mock.Mock(phone=None))
 
 
 @pytest.mark.parametrize("phone", [
@@ -51,10 +49,7 @@ def test_providing_phone_for_domestic_shipment(
         phone, service, shipment, gb_default_phone,
 ):
     shipment.shipping_address.phone = phone
-    assert shipment.is_domestic is True
-
     service.provide(shipment, 'GB')
-
     assert shipment.shipping_address.phone == gb_default_phone
 
 
@@ -68,18 +63,22 @@ def test_not_providing_phone_for_domestic_shipment(
         phone, expected_phone, service, shipment,
 ):
     shipment.shipping_address.phone = phone
-    assert shipment.is_domestic is True
-
     service.provide(shipment, 'GB')
-
     assert shipment.shipping_address.phone == expected_phone
 
 
-def test_not_providing_phone_for_domestic_shipment_if_no_default_set(
-        service, shipment,
+@pytest.mark.parametrize("phone, country", [
+    (None, 'PL'),
+    (None, 'DE'),
+    (None, 'FR'),
+    ('0 7  344546234', 'PL'),
+    ('7 344546234', 'DE'),
+    ('+ 44 72453', 'FR'),
+    ('0 044 72453', 'US'),
+])
+def test_not_changing_shipping_added_phone_when_not_gb_shipment(
+        service, shipment, phone, country,
 ):
-    shipment.shipping_address.phone = None
-
+    shipment.shipping_address.phone = phone
     service.provide(shipment, 'PL')
-
-    assert shipment.shipping_address.phone is None
+    assert shipment.shipping_address.phone == phone
