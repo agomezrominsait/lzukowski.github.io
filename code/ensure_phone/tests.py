@@ -50,13 +50,13 @@ def test_providing_phone_for_domestic_shipment(
 def test_not_providing_phone_for_domestic_shipment(
         phone, expected_phone, service, get_parameter_service, shipment,
 ):
-    get_parameter_service.return_value = '07346923435'
     shipment.shipping_address.phone = phone
     assert shipment.is_domestic is True
 
     service.provide(shipment, 'GB')
 
     assert shipment.shipping_address.phone == expected_phone
+    get_parameter_service.assert_not_called()
 
 
 def test_not_providing_phone_for_domestic_shipment_if_no_default_set(
