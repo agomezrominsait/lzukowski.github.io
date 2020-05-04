@@ -23,17 +23,13 @@ def shipment():
     return s
 
 
-@pytest.mark.parametrize("phone, expected_phone", [
-    (None, '07346923435'),
-    ('', '07346923435'),
-    ('344546234', '07346923435'),
-    ('0 44 72453', '07346923435'),
-    ('+44 072453', '07346923435'),
-    ('+44472453', '07346923435'),
+@pytest.mark.parametrize("phone", [
+    None, '', '344546234', '0 44 72453', '+44 072453', '+44472453',
 ])
 def test_providing_phone_for_domestic_shipment(
-        phone, expected_phone, service, get_parameter_service, shipment,
+        phone, service, get_parameter_service, shipment,
 ):
+    expected_phone = '07346923435'
     get_parameter_service.return_value = '07346923435'
     shipment.shipping_address.phone = phone
     assert shipment.is_domestic is True
