@@ -16,18 +16,16 @@ class Shipment:
 def normalize_gb_phone(phone: Phone) -> Optional[Phone]:
     no_whitespaces = "".join(phone.split())
 
-    valid_gb_phone = no_whitespaces.startswith('07')
-    if valid_gb_phone:
-        return Phone(no_whitespaces)
-
     without_country_prefix = no_whitespaces
     if no_whitespaces.startswith('+44'):
-        without_country_prefix = no_whitespaces[3:]
+        without_country_prefix = f'0{no_whitespaces[3:]}'
     elif no_whitespaces.startswith('0044'):
-        without_country_prefix = no_whitespaces[4:]
+        without_country_prefix = f'0{no_whitespaces[4:]}'
+    elif no_whitespaces.startswith('7'):
+        without_country_prefix = f'0{no_whitespaces}'
 
-    if without_country_prefix.startswith('7'):
-        return Phone('0' + without_country_prefix)
+    if without_country_prefix.startswith('07'):
+        return Phone(without_country_prefix)
     else:
         return None
 
