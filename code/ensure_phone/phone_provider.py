@@ -13,6 +13,20 @@ class Shipment:
     shipping_address: Address
 
 
+def normalize_gb_phone(phone: Phone) -> Optional[Phone]:
+    phone = "".join(phone.split())
+    if not phone.startswith('07'):
+        if phone.startswith('+44'):
+            phone = phone[3:]
+        elif phone.startswith('0044'):
+            phone = phone[4:]
+        if phone.startswith('7'):
+            phone = '0' + phone  # valid
+        else:  # invalid
+            return None
+    return Phone(phone)
+
+
 class PhoneProvider:
     def __init__(self, parameters_service: ParameterService):
         self._parameters_service = parameters_service
@@ -34,15 +48,5 @@ class PhoneProvider:
         if not phone:
             return phone
         if country == 'GB':
-            phone = "".join(phone.split())
-            if not phone.startswith('07'):
-                if phone.startswith('+44'):
-                    phone = phone[3:]
-                elif phone.startswith('0044'):
-                    phone = phone[4:]
-                if phone.startswith('7'):
-                    phone = '0' + phone  # valid
-                else:  # invalid
-                    return None
-
-        return phone  # valid
+            phone = normalize_gb_phone(phone)
+        return phone
