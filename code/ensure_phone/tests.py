@@ -1,22 +1,8 @@
-from typing import Dict, Text
+from typing import Text
 
 import pytest
 
 from phone_provider import Country, Phone, PhoneProvider
-
-
-class DummyParameterService:
-    def __init__(self, country_phones: Dict[Country, Phone]):
-        self._phones = {
-            f'default_phone_for_domestic_{country}': phone
-            for country, phone in country_phones.items()
-        }
-
-    def get(self, key: Text) -> Text:
-        phone = self._phones.get(key)
-        if not phone:
-            raise FileNotFoundError(key)
-        return phone
 
 
 @pytest.fixture
@@ -26,10 +12,12 @@ def company_support_line():
 
 @pytest.fixture
 def service(company_support_line):
-    parameter_service = DummyParameterService(
-        {Country('GB'): Phone(company_support_line)}
-    )
-    return PhoneProvider(parameter_service.get)
+    def get_parameter(key: Text) -> Text:
+        if key != f'default_phone_for_domestic_GB':
+            raise FileNotFoundError(key)
+        return company_support_line
+
+    return PhoneProvider(get_parameter)
 
 
 class TestPhoneProvider:

@@ -25,20 +25,15 @@ class PhoneProvider:
     def provide(
             self, phone: Optional[Phone], country: Country
     ) -> Optional[Phone]:
-        validated_phone = phone and self._get_valid_phone(phone, country)
-        return validated_phone or self._support_line(country)
+        if country != 'GB':
+            return phone
+        validated_phone = phone and self._get_valid_phone(phone)
+        return validated_phone or self._company_support_line()
 
     @staticmethod
-    def _get_valid_phone(phone: Phone, country: Country) -> Optional[Phone]:
-        if country == 'GB':
-            phone = normalize_gb_phone(phone)
-            return phone if phone.startswith('07') else None
-        return phone
+    def _get_valid_phone(phone: Phone) -> Optional[Phone]:
+        phone = normalize_gb_phone(phone)
+        return phone if phone.startswith('07') else None
 
-    def _support_line(self, country: Country) -> Optional[Phone]:
-        try:
-            return Phone(
-                self._get_parameter(f'default_phone_for_domestic_{country}')
-            )
-        except FileNotFoundError:
-            return None
+    def _company_support_line(self) -> Optional[Phone]:
+        return Phone(self._get_parameter(f'default_phone_for_domestic_GB'))
