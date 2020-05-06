@@ -30,8 +30,8 @@ class PhoneProvider:
         validated_phone = phone and self._get_valid_phone(phone)
         return validated_phone or self._company_support_line()
 
-    @staticmethod
-    def _get_valid_phone(phone: Phone) -> Optional[Phone]:
+    @classmethod
+    def _get_valid_phone(cls, phone: Phone) -> Optional[Phone]:
         phone = normalize_gb_phone(phone)
         return phone if phone.startswith('07') else None
 
