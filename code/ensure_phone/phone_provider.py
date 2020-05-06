@@ -23,11 +23,7 @@ def normalize_gb_phone(phone: Phone) -> Optional[Phone]:
         without_country_prefix = f'0{no_whitespaces[4:]}'
     elif no_whitespaces.startswith('7'):
         without_country_prefix = f'0{no_whitespaces}'
-
-    if without_country_prefix.startswith('07'):
-        return Phone(without_country_prefix)
-    else:
-        return None
+    return Phone(without_country_prefix)
 
 
 class PhoneProvider:
@@ -52,4 +48,5 @@ class PhoneProvider:
             return phone
         if country == 'GB':
             phone = normalize_gb_phone(phone)
+            return phone if phone.startswith('07') else None
         return phone
