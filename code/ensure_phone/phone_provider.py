@@ -28,25 +28,26 @@ def normalize_gb_phone(phone: Phone) -> Optional[Phone]:
 
 class PhoneProvider:
     def __init__(self, parameters_service: ParameterService):
-        self._parameters_service = parameters_service
+        self._get_parameter = parameters_service
 
     def provide(self, shipment: Shipment, country: Country) -> None:
-        shipment.shipping_address.phone = \
-            self._ensure_phone(shipment.shipping_address.phone, country)
-        if not shipment.shipping_address.phone:
-            try:
-                shipment.shipping_address.phone = self._parameters_service(
-                    'default_phone_for_domestic_%s' % country)
-            except FileNotFoundError:  # phone won't be provided
-                pass
+        phone = shipment.shipping_address.phone
+        phone = phone and self._get_valid_phone(phone, country)
+        shipment.shipping_address.phone = (
+            phone or self._get_default_country_phone(country)
+        )
 
     @staticmethod
-    def _ensure_phone(
-            phone: Optional[Phone], country: Country,
-    ) -> Optional[Phone]:
-        if not phone:
-            return phone
+    def _get_valid_phone(phone: Phone, country: Country) -> Optional[Phone]:
         if country == 'GB':
             phone = normalize_gb_phone(phone)
             return phone if phone.startswith('07') else None
         return phone
+
+    def _get_default_country_phone(self, country: Country) -> Optional[Phone]:
+        try:
+            return Phone(
+                self._get_parameter(f'default_phone_for_domestic_{country}')
+            )
+        except FileNotFoundError:
+            return None
