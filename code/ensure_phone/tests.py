@@ -1,16 +1,16 @@
 from typing import Text
 
-import pytest
+from pytest import fixture, mark
 
 from phone_provider import Country, Phone, PhoneProvider
 
 
-@pytest.fixture
+@fixture
 def company_support_line():
     return Phone('07346923435')
 
 
-@pytest.fixture
+@fixture
 def service(company_support_line):
     def get_parameter(key: Text) -> Text:
         if key != f'default_phone_for_domestic_GB':
@@ -21,7 +21,7 @@ def service(company_support_line):
 
 
 class TestPhoneProvider:
-    @pytest.mark.parametrize("invalid_phone", [
+    @mark.parametrize("invalid_phone", [
         None,
         Phone(''),
         Phone('344546234'),
@@ -36,7 +36,7 @@ class TestPhoneProvider:
             company_support_line
         )
 
-    @pytest.mark.parametrize("valid_phone", [
+    @mark.parametrize("valid_phone", [
         Phone('07344546234'),
         Phone('072453'),
     ])
@@ -45,7 +45,7 @@ class TestPhoneProvider:
     ):
         assert service.provide(valid_phone, Country('GB')) == valid_phone
 
-    @pytest.mark.parametrize("phone, country", [
+    @mark.parametrize("phone, country", [
         (None, 'PL'),
         (None, 'DE'),
         (None, 'FR'),
@@ -61,7 +61,7 @@ class TestPhoneProvider:
 
 
 class TestPhoneNormalization:
-    @pytest.mark.parametrize("phone, normalized_phone", [
+    @mark.parametrize("phone, normalized_phone", [
         (Phone('0 7  344546234'), '07344546234'),
         (Phone('7 344546234'), '07344546234'),
     ])
@@ -70,7 +70,7 @@ class TestPhoneNormalization:
     ):
         assert service.provide(phone, Country('GB')) == normalized_phone
 
-    @pytest.mark.parametrize("phone, normalized_phone", [
+    @mark.parametrize("phone, normalized_phone", [
         (Phone('+ 44 72453'), '072453'),
         (Phone('0 044 72453'), '072453'),
     ])
