@@ -30,12 +30,10 @@ class PhoneProvider:
     def __init__(self, parameters_service: ParameterService):
         self._get_parameter = parameters_service
 
-    def provide(self, shipment: Shipment, country: Country) -> None:
+    def provide(self, shipment: Shipment, country: Country) -> Optional[Phone]:
         phone = shipment.shipping_address.phone
         phone = phone and self._get_valid_phone(phone, country)
-        shipment.shipping_address.phone = (
-            phone or self._get_default_country_phone(country)
-        )
+        return phone or self._get_default_country_phone(country)
 
     @staticmethod
     def _get_valid_phone(phone: Phone, country: Country) -> Optional[Phone]:

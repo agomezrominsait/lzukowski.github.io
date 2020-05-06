@@ -55,8 +55,8 @@ class TestPhoneProvider:
             self, invalid_phone, service, shipment, gb_default_phone,
     ):
         shipment.shipping_address.phone = invalid_phone
-        service.provide(shipment, Country('GB'))
-        assert shipment.shipping_address.phone == gb_default_phone
+        provided_phone = service.provide(shipment, Country('GB'))
+        assert provided_phone == gb_default_phone
 
     @pytest.mark.parametrize("valid_phone", [
         Phone('07344546234'),
@@ -66,8 +66,8 @@ class TestPhoneProvider:
             self, valid_phone, service, shipment,
     ):
         shipment.shipping_address.phone = valid_phone
-        service.provide(shipment, Country('GB'))
-        assert shipment.shipping_address.phone == valid_phone
+        provided_phone = service.provide(shipment, Country('GB'))
+        assert provided_phone == valid_phone
 
     @pytest.mark.parametrize("phone, country", [
         (None, 'PL'),
@@ -82,8 +82,8 @@ class TestPhoneProvider:
             self, service, shipment, phone, country,
     ):
         shipment.shipping_address.phone = phone
-        service.provide(shipment, Country('PL'))
-        assert shipment.shipping_address.phone == phone
+        provided_phone = service.provide(shipment, Country('PL'))
+        assert provided_phone == phone
 
 
 class TestPhoneNormalization:
@@ -95,8 +95,8 @@ class TestPhoneNormalization:
             self, phone, normalized_phone, service, shipment,
     ):
         shipment.shipping_address.phone = phone
-        service.provide(shipment, Country('GB'))
-        assert shipment.shipping_address.phone == normalized_phone
+        provided_phone = service.provide(shipment, Country('GB'))
+        assert provided_phone == normalized_phone
 
     @pytest.mark.parametrize("phone, normalized_phone", [
         (Phone('+ 44 72453'), '072453'),
@@ -106,5 +106,5 @@ class TestPhoneNormalization:
             self, phone, normalized_phone, shipment, service,
     ):
         shipment.shipping_address.phone = phone
-        service.provide(shipment, Country('GB'))
-        assert shipment.shipping_address.phone == normalized_phone
+        provided_phone = service.provide(shipment, Country('GB'))
+        assert provided_phone == normalized_phone
