@@ -5,14 +5,6 @@ Phone = NewType('Phone', Text)
 ParameterService = Callable[[Text], Text]
 
 
-class Shipment:
-    class Address:
-        phone: Optional[Phone]
-
-    is_domestic: bool
-    shipping_address: Address
-
-
 def normalize_gb_phone(phone: Phone) -> Optional[Phone]:
     no_whitespaces = "".join(phone.split())
 
@@ -30,10 +22,11 @@ class PhoneProvider:
     def __init__(self, parameters_service: ParameterService):
         self._get_parameter = parameters_service
 
-    def provide(self, shipment: Shipment, country: Country) -> Optional[Phone]:
-        phone = shipment.shipping_address.phone
-        phone = phone and self._get_valid_phone(phone, country)
-        return phone or self._get_default_country_phone(country)
+    def provide(
+            self, phone: Optional[Phone], country: Country
+    ) -> Optional[Phone]:
+        validated_phone = phone and self._get_valid_phone(phone, country)
+        return validated_phone or self._get_default_country_phone(country)
 
     @staticmethod
     def _get_valid_phone(phone: Phone, country: Country) -> Optional[Phone]:
