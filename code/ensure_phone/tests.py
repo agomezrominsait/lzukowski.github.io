@@ -20,14 +20,14 @@ class DummyParameterService:
 
 
 @pytest.fixture
-def gb_default_phone():
+def company_support_line():
     return Phone('07346923435')
 
 
 @pytest.fixture
-def service(gb_default_phone):
+def service(company_support_line):
     parameter_service = DummyParameterService(
-        {Country('GB'): Phone(gb_default_phone)}
+        {Country('GB'): Phone(company_support_line)}
     )
     return PhoneProvider(parameter_service.get)
 
@@ -41,16 +41,18 @@ class TestPhoneProvider:
         Phone('+44 072453'),
         Phone('+44472453'),
     ])
-    def test_default_gb_phone_when_invalid_phone_in_gb_shipment(
-            self, invalid_phone, service, gb_default_phone,
+    def test_company_support_phone_when_when_invalid_phone_in_gb_shipment(
+            self, invalid_phone, service, company_support_line,
     ):
-        assert service.provide(invalid_phone, Country('GB')) == gb_default_phone
+        assert service.provide(invalid_phone, Country('GB')) == (
+            company_support_line
+        )
 
     @pytest.mark.parametrize("valid_phone", [
         Phone('07344546234'),
         Phone('072453'),
     ])
-    def test_no_changing_shipping_phone_when_valid_gb_phone(
+    def test_shipment_phone_when_phone_is_valid_gb_personal_phone(
             self, valid_phone, service,
     ):
         assert service.provide(valid_phone, Country('GB')) == valid_phone
@@ -84,5 +86,7 @@ class TestPhoneNormalization:
         (Phone('+ 44 72453'), '072453'),
         (Phone('0 044 72453'), '072453'),
     ])
-    def test_remove_country_prefix(self, phone, normalized_phone, service):
+    def test_remove_country_prefix_when_valid_gb_phone(
+            self, phone, normalized_phone, service,
+    ):
         assert service.provide(phone, Country('GB')) == normalized_phone

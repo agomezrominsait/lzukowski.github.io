@@ -26,7 +26,7 @@ class PhoneProvider:
             self, phone: Optional[Phone], country: Country
     ) -> Optional[Phone]:
         validated_phone = phone and self._get_valid_phone(phone, country)
-        return validated_phone or self._get_default_country_phone(country)
+        return validated_phone or self._support_line(country)
 
     @staticmethod
     def _get_valid_phone(phone: Phone, country: Country) -> Optional[Phone]:
@@ -35,7 +35,7 @@ class PhoneProvider:
             return phone if phone.startswith('07') else None
         return phone
 
-    def _get_default_country_phone(self, country: Country) -> Optional[Phone]:
+    def _support_line(self, country: Country) -> Optional[Phone]:
         try:
             return Phone(
                 self._get_parameter(f'default_phone_for_domestic_{country}')
