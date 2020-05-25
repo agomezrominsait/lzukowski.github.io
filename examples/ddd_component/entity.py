@@ -1,17 +1,17 @@
 from typing import NewType, Text, Optional
 from uuid import UUID, uuid1
 
-UnitOfWorkID = NewType('UnitOfWorkID', UUID)
+EntityID = NewType('EntityID', UUID)
 
 
-class UnitOfWorkDTO:
-    id: UnitOfWorkID
+class EntityDTO:
+    id: EntityID
     value: Optional[Text]
 
 
-class UnitOfWork:
-    id: UnitOfWorkID
-    dto: UnitOfWorkDTO
+class Entity:
+    id: EntityID
+    dto: EntityDTO
 
     class Event:
         pass
@@ -19,16 +19,16 @@ class UnitOfWork:
     class Updated(Event):
         pass
 
-    def __init__(self, dto: UnitOfWorkDTO) -> None:
+    def __init__(self, dto: EntityDTO) -> None:
         self.id = dto.id
         self.dto = dto
 
     @classmethod
-    def create(cls) -> 'UnitOfWork':
-        dto = UnitOfWorkDTO()
-        dto.id = UnitOfWorkID(uuid1())
+    def create(cls) -> 'Entity':
+        dto = EntityDTO()
+        dto.id = EntityID(uuid1())
         dto.value = None
-        return UnitOfWork(dto)
+        return Entity(dto)
 
     def update(self, value: Text) -> Updated:
         self.dto.value = value

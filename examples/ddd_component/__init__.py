@@ -1,6 +1,6 @@
 from . import commands, events, exceptions
 from .app import handler
-from .uow import UnitOfWorkID
+from .uow import EntityID
 from .service import CommandHandler, Listener
 
 handle = handler.handle
@@ -11,7 +11,7 @@ __all__ = [
     'commands',
     'events',
     'exceptions',
-    'UnitOfWorkID',
+    'EntityID',
     'CommandHandler',
     'handle',
     'register',

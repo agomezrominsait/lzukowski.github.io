@@ -4,7 +4,7 @@ from functools import singledispatch
 from uuid import UUID, uuid1
 
 from .commands import Command, CommandID
-from .uow import UnitOfWork, UnitOfWorkID
+from .entity import Entity, EntityID
 
 EventID = UUID
 
@@ -18,7 +18,7 @@ class Event:
 @dataclass
 class Created(Event):
     command_id: CommandID
-    uow_id: UnitOfWorkID
+    uow_id: EntityID
     event_id: EventID = field(default_factory=uuid1)
     timestamp: datetime = field(default_factory=datetime.utcnow)
 
@@ -31,10 +31,10 @@ class Updated(Event):
 
 
 @singledispatch
-def app_event(event: UnitOfWork.Event, command: Command) -> Event:
+def app_event(event: Entity.Event, command: Command) -> Event:
     raise NotImplementedError
 
 
-@app_event.register(UnitOfWork.Updated)
-def _(event: UnitOfWork.Updated, command: Command) -> Updated:
+@app_event.register(Entity.Updated)
+def _(event: Entity.Updated, command: Command) -> Updated:
     return Updated(command.command_id)

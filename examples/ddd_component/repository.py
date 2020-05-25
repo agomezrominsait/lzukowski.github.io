@@ -1,10 +1,10 @@
 from sqlalchemy import Table, Column, String, Integer, MetaData
 from sqlalchemy.orm import mapper, Session
 
-from . import UnitOfWorkID
+from . import EntityID
 from .exceptions import NotFound
 from .service import Repository
-from .uow import UnitOfWorkDTO, UnitOfWork
+from .entity import EntityDTO, Entity
 
 meta = MetaData()
 
@@ -16,8 +16,8 @@ entities_t: Table = Table(
     Column('value', String, nullable=True),
 )
 
-UnitOfWorkMapper = mapper(
-    UnitOfWorkDTO,
+EntityMapper = mapper(
+    EntityDTO,
     entities_t,
     properties={
         'id': entities_t.c.uuid,
@@ -30,14 +30,14 @@ UnitOfWorkMapper = mapper(
 class ORMRepository(Repository):
     def __init__(self, session: Session):
         self._session = session
-        self._query = self._session.query(UnitOfWorkMapper)
+        self._query = self._session.query(EntityMapper)
 
-    def get(self, uow_id: UnitOfWorkID) -> UnitOfWork:
-        dto = self._query.filter_by(uuid=uow_id).one_or_none()
+    def get(self, entity_id: EntityID) -> Entity:
+        dto = self._query.filter_by(uuid=entity_id).one_or_none()
         if not dto:
-            raise NotFound(uow_id)
-        return UnitOfWork(dto)
+            raise NotFound(entity_id)
+        return Entity(dto)
 
-    def save(self, uow: UnitOfWork) -> None:
-        self._session.add(uow.dto)
+    def save(self, entity: Entity) -> None:
+        self._session.add(entity.dto)
         self._session.flush()

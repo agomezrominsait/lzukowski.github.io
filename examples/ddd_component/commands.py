@@ -4,13 +4,13 @@ from datetime import datetime
 from typing import Text
 from uuid import UUID, uuid1
 
-from examples.ddd_component.uow import UnitOfWorkID
+from .entity import EntityID
 
 CommandID = UUID
 
 
 class Command(ABC):
-    uow_id: UnitOfWorkID
+    entity_id: EntityID
     command_id: CommandID
     timestamp: datetime
 
@@ -23,7 +23,7 @@ class Create(Command):
 
 @dataclass
 class UpdateValue(Command):
-    uow_id: UnitOfWorkID
+    entity_id: EntityID
     value: Text
     command_id: CommandID = field(default_factory=uuid1)
     timestamp: datetime = field(default_factory=datetime.utcnow)
