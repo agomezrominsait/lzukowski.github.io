@@ -25,7 +25,7 @@ footer-links:
   instagram:
   linkedin: https://www.linkedin.com/in/%C5%82ukasz-%C5%BCukowski-084b347/
   pinterest:
-  rss: # just type anything here for a working RSS icon
+  rss: https://lzukowski.github.io/atom.xml
   twitter: 
   stackoverflow: users/6117182/lzukowski # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
@@ -71,6 +71,9 @@ kramdown:
 # Set the Sass partials directory, as we're using @imports
 sass:
   style: :expanded # You might prefer to minify using :compressed
+
+feed:
+  path: atom.xml
 
 # Use the following plug-ins
 plugins:
