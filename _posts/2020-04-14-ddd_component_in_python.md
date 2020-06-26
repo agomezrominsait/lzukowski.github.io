@@ -1,6 +1,6 @@
 ---
 layout: redirect
-redirect: http://lukeonpython.blog//2020/04/my-structure-for-ddd-component/
+redirect: https://lukeonpython.blog//2020/04/my-structure-for-ddd-component/
 title: My structure for DDD component
 categories: [ddd, stackoverflow]
 tags: [python, ddd, component, code architecture, stackoverflow]

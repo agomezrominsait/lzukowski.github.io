@@ -1,6 +1,6 @@
 ---
 layout: redirect
-redirect: http://lukeonpython.blog/2020/05/refactoring-exercise-of-some-legacy-code/
+redirect: https://lukeonpython.blog/2020/05/refactoring-exercise-of-some-legacy-code/
 title: Refactoring exercise of some legacy code
 categories: [refactoring, legacy]
 tags: [python, legacy, refactoring]

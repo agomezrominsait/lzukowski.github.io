@@ -1,6 +1,6 @@
 ---
 layout: redirect
-redirect: http://lukeonpython.blog/2020/04/my-favorite-kind-of-feature-toggle/
+redirect: https://lukeonpython.blog/2020/04/my-favorite-kind-of-feature-toggle/
 title: My favorite kind of feature toggle
 categories: [ddd, stackoverflow]
 tags: [python, continuous delivery, feature switch]

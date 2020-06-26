@@ -1,6 +1,6 @@
 ---
 layout: redirect
-redirect: http://lukeonpython.blog/2020/06/process-manager-vs-ddd-aggregate/
+redirect: https://lukeonpython.blog/2020/06/process-manager-vs-ddd-aggregate/
 title: Process manager VS DDD Aggregate
 categories: [ddd]
 tags: [ddd, component, code architecture]

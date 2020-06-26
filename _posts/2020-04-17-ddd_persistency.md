@@ -1,6 +1,6 @@
 ---
 layout: redirect
-redirect: http://lukeonpython.blog/2020/04/persistency-of-ddd-aggregate/
+redirect: https://lukeonpython.blog/2020/04/persistency-of-ddd-aggregate/
 title: Persistency of DDD aggregate
 categories: [ddd, stackoverflow]
 tags: [python, DDD, persistency, sqlalchemy, stackoverflow]
